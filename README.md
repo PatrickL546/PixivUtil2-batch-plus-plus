@@ -1,15 +1,15 @@
 # About The Project
-A simple batch downloader for PixivUtil2 that I personally use for archiving
+A simple Powershell and some Python scripts that I personally use for archiving using PixivUtil2
 
-# Prerequisites
- - PixivUtil2 (Included) (https://github.com/Nandaka/PixivUtil2)
-
-# Installation
-I have included a copy of PixivUtil2. But if you want to use other versions, just replace it but it might not work properly
+# Notes
+ - PixivUtil2 (https://github.com/Nandaka/PixivUtil2)
+ - Read requirements of PixivUtil2
+ - I have included a copy of PixivUtil2. But if you want to use other versions, just replace it but it might not work properly
 
 # Usage
- - Set up 'config.ini' in '!Scripts' folder, or you can copy your own config.ini into '!Scripts' folder
- - Use these settings
+ - Go to `!Scripts` folder
+ - Set up `config.ini`, or you can replace it with your own `config.ini`
+ - I recommend to use these settings
 ```
 useList = True
 ```
@@ -20,7 +20,9 @@ password =
 cookie =
 cookieFanbox =
 ```
- - Set up 'Scripts settings.psm1' in '!Scripts' folder
+ - Set up `Scripts settings.psm1`
+ - To get started. Run `0 Start.ps1` in powershell
+ - A normal flow will using option `[1]` then `[2]` and then `[4]`
 
 ## Menu
 ```

@@ -9,7 +9,7 @@ A simple Powershell and some Python scripts that I personally use for archiving 
 # Usage
  - Go to `!Scripts` folder
  - Set up `config.ini`, or you can replace it with your own `config.ini`
- - I recommend to use these settings
+ - I recommend using these settings
 ```
 useList = True
 ```
@@ -21,7 +21,7 @@ cookie =
 cookieFanbox =
 ```
  - Set up `Scripts settings.psm1`
- - To get started. Run `0 Start.ps1` in powershell
+ - To get started. Run `0 Start.ps1` in PowerShell
  - A normal flow will using option `[1]` then `[2]` and then `[4]`
 
 ## Menu
@@ -29,7 +29,7 @@ cookieFanbox =
 -----------------MENU-----------------
 
 Press [1] Make copy
- - Copies config.ini into 'PixivUtil2' folder and make folder copies
+ - Copies config.ini into 'PixivUtil2' folder, and make folder copies
 
 Press [2] Export ID and copy Pixiv ID
  - Exports your online bookmark and process it
@@ -45,6 +45,8 @@ Press [6] Delete pixivutil.log (Optional)
 
 Press [7] Convert ugoira to webm (Optional)
  - Uses PixivUtil2 and [FFmpeg] settings in config.ini to convert ugoira to webm
+ - Old webm settings uses tons of space, pre-https://github.com/Nandaka/PixivUtil2/releases/tag/v20211104
+ - This can save 10x from the original size
 
 Press [8] Delete ugoira zip file (Optional)
  - If you didn't have 'deleteZipFile = True' in [Ugoira] settings in config.ini,

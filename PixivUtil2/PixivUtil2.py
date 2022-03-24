@@ -182,8 +182,8 @@ def menu():
     print(' b. Batch Download from batch_job.json (experimental)')
     print(Style.BRIGHT + '── Others '.ljust(PADDING, "─") + Style.RESET_ALL)
     print(' d. Manage database')
-    print(' e. Export online bookmark')
-    print(' m. Export online user bookmark')
+    print(' e. Export online followed artist.')
+    print(' m. Export online other\'s followed artist.')
     print(' i. Import list file')
     print(' r. Reload config.ini')
     print(' p. Print config.ini')
@@ -730,7 +730,7 @@ def menu_download_by_group_id(opisvalid, args, options):
 
 
 def menu_export_online_bookmark(opisvalid, args, options):
-    __log__.info('Export Bookmark mode (e).')
+    __log__.info('Export Followed Artists mode (e).')
     hide = "y"  # y|n|o
     filename = "export.txt"
 
@@ -754,7 +754,7 @@ def menu_export_online_bookmark(opisvalid, args, options):
 
 
 def menu_export_online_user_bookmark(opisvalid, args, options):
-    __log__.info('Export Bookmark mode (m).')
+    __log__.info('Export Other\'s Followed Artist mode (m).')
     member_id = ''
     filename = "export-user.txt"
 
@@ -772,7 +772,8 @@ def menu_export_online_user_bookmark(opisvalid, args, options):
     if arg.isdigit():
         member_id = arg
     else:
-        print("Invalid args: ", arg)
+        print("Invalid args, member id is expected: ", arg)
+        return
 
     PixivBookmarkHandler.export_bookmark(sys.modules[__name__], __config__, filename, 'n', 1, 0, member_id)
 
@@ -1083,7 +1084,7 @@ def set_console_title(title=''):
 def setup_option_parser():
 
     global __valid_options
-    __valid_options = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'
+    __valid_options = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18',
                        'f1', 'f2', 'f3', 'f4', 'f5',
                        's1', 's2',
                        'd', 'e', 'm', 'b')

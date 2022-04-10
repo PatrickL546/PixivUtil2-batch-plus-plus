@@ -44,7 +44,7 @@ Press [5] Delete db.sqlite (Optional)
 Press [6] Delete pixivutil.log (Optional)
 
 Press [7] Convert ugoira to webm (Optional)
- - Uses PixivUtil2 and [FFmpeg] settings in config.ini to convert ugoira to webm
+ - Uses PixivUtil2 and [FFmpeg] settings in config.ini to convert ugoira to webm or any extention you choose
  - Old webm settings uses tons of space, pre-https://github.com/Nandaka/PixivUtil2/releases/tag/v20211104
  - This can save 10x from the original size
 

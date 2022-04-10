@@ -22,7 +22,7 @@ cookieFanbox =
 ```
  - Set up `Scripts settings.psm1`
  - To get started. Run `0 Start.ps1` in PowerShell
- - A normal flow will using option `[1]` then `[2]` and then `[4]`
+ - A normal flow will using option `[1]` then `[2]` and then `[4]` for downloading
 
 ## Menu
 ```

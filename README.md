@@ -54,7 +54,7 @@ Press [8] Delete ugoira zip file (Optional)
 ```
 
 # Credits/Contributor
- - PatrickL546
+ - PatrickL546 (I can't code, what I write will be bad)
 
 # License
 

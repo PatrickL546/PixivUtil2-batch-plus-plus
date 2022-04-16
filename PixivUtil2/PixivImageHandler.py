@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import traceback
+import pathlib
 import urllib
 
 from colorama import Fore, Style
@@ -436,4 +437,44 @@ def process_manga_series(caller,
         traceback.print_exception(exc_type, exc_value, exc_traceback)
         PixivHelper.print_and_log('error', f'Error at process_manga_series(): {manga_series_id}')
         PixivHelper.print_and_log('error', f'Exception: {sys.exc_info()}')
+        raise
+
+def process_ugoira_local(caller, config):
+    directory = config.rootDirectory
+    counter = 0
+
+    try:
+        print('')
+        counter = 0
+        for zip in pathlib.Path(directory).rglob('*.zip'):
+            counter += 1
+            PixivHelper.print_and_log(None, f"# Ugoira {counter}")
+            zip_name = os.path.splitext(os.path.basename(zip))[0]
+            PixivHelper.print_and_log("info", f"Deleting old ugoira files ...", newline = False)
+            for file in pathlib.Path(os.path.dirname(zip)).rglob(f'{zip_name}.*'):
+                file_ext = os.path.splitext(os.path.basename(file))[1]
+                if  ((("ugoira" in file_ext) and (config.createUgoira))     or
+                    (("gif" in file_ext) and (config.createGif))            or
+                    (("png" in file_ext) and (config.createApng))           or
+                    (("webm" in file_ext) and (config.createWebm))          or
+                    (("webp" in file_ext) and (config.createWebp))):
+                    abs_file_path = os.path.abspath(file)
+                    PixivHelper.print_and_log("debug", f"Deleting {abs_file_path}")
+                    os.remove(abs_file_path)
+            PixivHelper.print_and_log(None, f" done.")
+            # Get id artwork
+            image_id = zip_name.partition("_")[0]
+            process_image(  caller,
+                            config,
+                            artist=None,
+                            image_id=image_id,
+                            useblacklist=False)
+        if counter == 0:
+            PixivHelper.print_and_log('info', "No zip file found for re-encoding ugoira.")
+
+    except Exception as ex:
+        if isinstance(ex, KeyboardInterrupt):
+            raise
+        PixivHelper.print_and_log('error', 'Error at process_ugoira_local(): %s' %str(sys.exc_info()))
+        PixivHelper.print_and_log('error', 'failed')
         raise

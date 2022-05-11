@@ -284,10 +284,10 @@ Please refer run with `--help` for latest information.
                         l - Export local database image_id/post_id
                             (required: --up=USE_PIXIV, and --uf=USE_FANBOX, and --us=USE_SKETCH)
                         e - Export online bookmark
-                            (required: -p BOOKMARK_FLAG [y/n/o] for private bookmark
-                             optional: filename)
+                            (required: -p BOOKMARK_FLAG [y/n/o] for private bookmark,
+                             optional: --ef=EXPORT_FILENAME)
                         m - Export online user bookmark
-                            (required: member_id, optional: followed by filename)
+                            (required: member_id, optional: --ef=EXPORT_FILENAME)
                         d - Manage database
   -x, --exitwhendone    Exit programm when done.
                         (only useful when DB-Manager)
@@ -775,6 +775,12 @@ Specific for PixivSketch (option 1 if PixivSketch included, s1, and s2 ):
 ```
 -> %sketch_member_id%
    Pixiv Sketch artist id, might be different from Pixiv's artist id.
+```
+Specific for Fanbox:
+```
+-> %fanbox_name%
+   Fanbox name, might be different from Pixiv's artist name.
+   Useful if the artist is suspended from Pixiv and there is no record in the DB to avoid interuption.
 ```
 # list.txt Format
 - This file should be build in the following way, white space will be trimmed,

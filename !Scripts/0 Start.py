@@ -63,12 +63,12 @@ Enter [9] Delete list export (Optional)
         print(f'{bcolors.WARNING}Please select a valid option{bcolors.ENDC}\n')
     elif selected == 'R' or selected == 'r':
         os.system('cls')
-        Scripts_config.Main(options[selected])
         print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')
+        Scripts_config.Main(options[selected])
     else:
         os.system('cls')
+        print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')
         try:
             os.startfile(options[selected])
         except FileNotFoundError:
             print(f'{bcolors.FAIL}File not found{bcolors.ENDC}\n')
-        print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')

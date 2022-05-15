@@ -63,6 +63,7 @@ Press [3] Archive Pixiv ID
         break
     elif selected == '1':
         os.system('cls')
+        print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')
 
         args = ['python.exe', r'../PixivUtil2/PixivUtil2.py']
         args.extend(PixivExportArg)
@@ -77,9 +78,9 @@ Press [3] Archive Pixiv ID
                 for id in pixivIDContent:
                     f.write(f'{id}\n')
 
-        print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')
     elif selected == '2':
         os.system('cls')
+        print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')
 
         with open(r'./2 Pixiv ID.txt') as f:
             pixivIDContent = f.read().splitlines()
@@ -89,12 +90,11 @@ Press [3] Archive Pixiv ID
             for id in pixivIDContent:
                 f.write(f'{id}\n')
 
-        print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')
     elif selected == '3':
         os.system('cls')
+        print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')
 
-        if not os.path.exists('./Export Archive'):
-            os.mkdir('./Export Archive')
+        os.makedirs(r'./Export Archive', exist_ok=True)
 
         time = datetime.today()
         time = time.strftime(DateFormat)
@@ -104,7 +104,6 @@ Press [3] Archive Pixiv ID
         except Exception:
             print('Failed to archive\n')
 
-        print(f'{bcolors.OKGREEN}You selected option {selected}{bcolors.ENDC}\n')
     elif (selected == 'Q' or selected == 'q'):
         sys.exit()
     else:

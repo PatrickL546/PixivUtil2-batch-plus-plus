@@ -14,7 +14,7 @@ FanboxCopy = int(config['Settings']['FanboxCopy'])
 PixivCopy = int(config['Settings']['PixivCopy'])
 
 PixivExportArg = config['Settings']['PixivExportArg']
-PixivExportArg = PixivExportArg.split(", ")
+PixivExportArg = PixivExportArg.split(', ')
 
 Scrub = config.getboolean('Settings', 'Scrub')
 DateFormat = config['Settings']['DateFormat']

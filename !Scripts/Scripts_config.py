@@ -46,13 +46,13 @@ if __name__ == '__main__':
     # PixivCopy = int(config['Settings']['PixivCopy'])
 
     # FanboxArg = config['Settings']['FanboxArg']
-    # FanboxArg = FanboxArg.split(", ")
+    # FanboxArg = FanboxArg.split(', ')
 
     # PixivArg = config['Settings']['PixivArg']
-    # PixivArg = PixivArg.split(", ")
+    # PixivArg = PixivArg.split(', ')
 
     # PixivExportArg = config['Settings']['PixivExportArg']
-    # PixivExportArg = PixivExportArg.split(", ")
+    # PixivExportArg = PixivExportArg.split(', ')
 
     # Scrub = config.getboolean('Settings', 'Scrub')
     # DateFormat = config['Settings']['DateFormat']

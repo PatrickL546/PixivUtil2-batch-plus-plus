@@ -17,10 +17,10 @@ class bcolors:
 
 
 FanboxArg = config['Settings']['FanboxArg']
-FanboxArg = FanboxArg.split(", ")
+FanboxArg = FanboxArg.split(', ')
 
 PixivArg = config['Settings']['PixivArg']
-PixivArg = PixivArg.split(", ")
+PixivArg = PixivArg.split(', ')
 
 ProblematicID = config['Settings']['ProblematicID']
 ProblematicID = ProblematicID.split(',')

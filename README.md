@@ -57,9 +57,9 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 - [1] Make instances
   - Copies `config.ini` to `/Instance/PixivUtil2` and create instance copies
 - [2] Export followed artist and process ID
-  - Can be modified with any export args in `config.ini`
+  - Can be modified with any export args in `Scripts config.ini`
 - [4] Start download
-  - Can be modified with any args in `config.ini`
+  - Can be modified with any args in `Scripts config.ini`
 - [6] Delete list
   - Deletes the `list.txt` and `listfanbox.txt`
 - [9] Re-encode webm

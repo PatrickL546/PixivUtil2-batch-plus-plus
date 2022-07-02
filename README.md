@@ -1,73 +1,71 @@
 # About The Project
 
-Simple Python scripts that I personally use for archiving using PixivUtil2
+Simple Python scripts that I personally use for archiving with PixivUtil2
 
 ## Requirements
 
 - PixivUtil2 (<https://github.com/Nandaka/PixivUtil2>)
 - Read requirements of PixivUtil2
-- I have included a copy of PixivUtil2. But if you want to use other versions, just replace it but it might not work properly
+- I have included a copy of PixivUtil2. But if you want to use other versions, just replace it, but it might not work properly
 - Windows PC
 
 ## Usage
 
-- Go to `!Scripts` folder
 - Set up `config.ini`, or you can replace it with your own `config.ini`
-- Use these settings, it might not work properly otherwises
+- Use these settings
 
 > useList = True
 
 - See (<https://github.com/Nandaka/PixivUtil2/blob/master/readme.md>) FAQ A.Q3
 
+>[Authentication]  
 >username =  
 >password =  
 >cookie =  
 >cookieFanbox =  
 
-- Run `Scripts_config.py` or `0 Start.py` to make the config file
-- Set up `Scripts config.ini`
-- To get started. Run `0 Start.py` (Note that you can run the scripts on their own without using this)
-- Normal steps will using option `[1]` then `[2]` and then `[4]` to download
+- Run `PixivUtil2 Batch Downloader.py` and set up `Scripts config.ini`
+- You can continue without restarting the script after you set it up
+- Use option [1] to make instances
+- Then [2] to export followed artists' ID
+- Then [4] to start download
+- All other options are not needed
 
 ### Menu
 
-> -----------------MENU-----------------
->
-> Enter [1] Make copy
->
-> - Copies config.ini into 'PixivUtil2' folder, and make folder copies
->
-> Enter [2] Export ID and copy Pixiv ID
->
-> - Exports your online bookmark and process it
->
-> Enter [3] Open list export (Optional)
->
-> - I use this for checking which ID is in which instances
->
-> Enter [4] Start download
->
-> Enter [5] Delete db.sqlite (Optional)
->
-> Enter [6] Delete pixivutil.log (Optional)
->
-> Enter [7] Convert ugoira (Optional)
->
-> - Uses PixivUtil2 and [FFmpeg] settings in config.ini to convert ugoira to webm or any extention you choose
->
-> - Old webm settings uses tons of space, pre-<https://github.com/Nandaka/PixivUtil2/releases/tag/v20211104>
->
-> - This can save ~10x from the original size
->
-> Enter [8] Delete ugoira zip file (Optional)
->
-> - If you didn't have 'deleteZipFile = True' in [Ugoira] settings in config.ini, and have the ugoira zip files taking space. You can use this to delete them
->
-> Enter [9] Delete list export (Optional)
->
-> Enter [R] Reset Scripts config to default
->
-> Enter [Q] to Quit
+    Check https://github.com/PatrickL546/PixivUtil2-batch-downloader for new versions
+
+            Functions
+
+    [1] Make instances
+    [2] Export followed artist and process ID
+    [3] Open ID list
+    [4] Start download
+    [5] Delete db.sqlite
+    [6] Delete list
+    [7] Delete pixivutil.log
+    [8] Delete .ugoira zip
+    [9] Re-encode webm
+
+    [R] Reset script settings
+
+    Press [CTRL + C] to exit functions
+    Enter [Q] to Quit
+
+#### This uses the command line arguments of PixivUtil2
+
+- [1] Make instances
+  - Copies `config.ini` to `/Instance/PixivUtil2` and create instance copies
+- [2] Export followed artist and process ID
+  - Can be modified with any export args in `config.ini`
+- [4] Start download
+  - Can be modified with any args in `config.ini`
+- [6] Delete list
+  - Deletes the `list.txt` and `listfanbox.txt`
+- [9] Re-encode webm
+  - This will override old webm
+  - Can be modified using `[FFmpeg]` option in `config.ini` in `/Instance/PixivUtil2`
+  - This can save lots of space if your webm are encoded in old settings, pre https://github.com/Nandaka/PixivUtil2/releases/tag/v20211104
 
 ## Credits/Contributor
 

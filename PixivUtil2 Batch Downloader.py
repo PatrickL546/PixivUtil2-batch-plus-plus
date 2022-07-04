@@ -194,10 +194,11 @@ def export_followed_artist_and_process_id():
                         subprocess.run(args, creationflags=subprocess.CREATE_NEW_CONSOLE)
 
                         if scrub:
-                            with open('./PixivUtil2 export.txt', 'w+') as f:
+                            with open('./PixivUtil2 export.txt', 'r') as f:
                                 content = f.read().splitlines()
                                 content = [_ for _ in content if '#' not in _]
 
+                            with open('./PixivUtil2 export.txt', 'w') as f:
                                 for line in content:
                                     f.write(f'{line}\n')
 

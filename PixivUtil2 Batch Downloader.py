@@ -359,8 +359,8 @@ def start_download():
             print(f'''{bcolors.FAIL}##### DO NOT CLOSE #####{bcolors.ENDC}''')
 
             if problematic_id:
-                dl_args_fanbox = ['python.exe', './Instance/PixivUtil2 - Problematic/PixivUtil2.py']
-                dl_args_pixiv = ['python.exe', './Instance/PixivUtil2 - Problematic/PixivUtil2.py']
+                dl_args_fanbox = ['python.exe', './PixivUtil2.py']
+                dl_args_pixiv = ['python.exe', './PixivUtil2.py']
 
                 dl_args_fanbox.extend(fanbox_arg)
                 dl_args_pixiv.extend(pixiv_arg)
@@ -372,14 +372,14 @@ def start_download():
             pixiv_path = Path('./Instance').glob('PixivUtil2 - Copy*')
 
             for path in fanbox_path:
-                dl_args_fanbox = ['python.exe', f'{path}/PixivUtil2.py']
+                dl_args_fanbox = ['python.exe', './PixivUtil2.py']
 
                 dl_args_fanbox.extend(fanbox_arg)
 
                 subprocess.Popen(dl_args_fanbox, creationflags=subprocess.CREATE_NEW_CONSOLE, cwd=f'{path}')
 
             for path in pixiv_path:
-                dl_args_pixiv = ['python.exe', f'{path}/PixivUtil2.py']
+                dl_args_pixiv = ['python.exe', './PixivUtil2.py']
 
                 dl_args_pixiv.extend(pixiv_arg)
 

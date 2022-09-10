@@ -85,28 +85,39 @@ def make_instances():
             problematic_id = [_.strip() for _ in problematic_id]
             problematic_id = list(filter(None, problematic_id))
 
-            os.makedirs('./Instance/PixivUtil2', exist_ok=True)
-            shutil.copy('./config.ini', './Instance/PixivUtil2')
+            shutil.copy('./config.ini', './Instance/PixivUtil2-master')
 
-            print('Copied config.ini to ./Instance/PixivUtil2\n')
+            print('Copied config.ini to ./Instance/PixivUtil2-master\n')
+
+            try:
+                shutil.copytree('./Instance/PixivUtil2-master',
+                                './Instance/PixivUtil2', dirs_exist_ok=True)
+            except Exception:
+                print('Failed to copy PixivUtil2-master')
+                os.system('pause')
+                print('Going to menu...')
+                time.sleep(2)
+                break
+
+            print('Copied ./Instance/PixivUtil2-master to ./Instance/PixivUtil2\n')
 
             if problematic_id:
-                shutil.copytree('./Instance/PixivUtil2',
+                shutil.copytree('./Instance/PixivUtil2-master',
                                 './Instance/PixivUtil2 - Problematic', dirs_exist_ok=True)
 
-                print('Copied ./Instance/PixivUtil2 to ./Instance/PixivUtil2 - Problematic\n')
+                print('Copied ./Instance/PixivUtil2-master to ./Instance/PixivUtil2 - Problematic\n')
 
             print('Making copies of ./Instance/PixivUtil2 - Fanbox\n')
 
             for i in range(fanbox_copy):
                 if i == 0:
-                    shutil.copytree('./Instance/PixivUtil2',
+                    shutil.copytree('./Instance/PixivUtil2-master',
                                     './Instance/PixivUtil2 - Fanbox', dirs_exist_ok=True)
                 elif i == 1:
-                    shutil.copytree('./Instance/PixivUtil2',
+                    shutil.copytree('./Instance/PixivUtil2-master',
                                     './Instance/PixivUtil2 - Fanbox - Copy', dirs_exist_ok=True)
                 else:
-                    shutil.copytree('./Instance/PixivUtil2',
+                    shutil.copytree('./Instance/PixivUtil2-master',
                                     f'./Instance/PixivUtil2 - Fanbox - Copy ({i})', dirs_exist_ok=True)
 
             print('Making copies of ./Instance/PixivUtil2 - Copy\n')
@@ -114,10 +125,10 @@ def make_instances():
             # Starts counting from 1 to sync up numbers in 'copy ()'
             for i in range(1, (pixiv_copy + 1)):
                 if i == 1:
-                    shutil.copytree('./Instance/PixivUtil2',
+                    shutil.copytree('./Instance/PixivUtil2-master',
                                     './Instance/PixivUtil2 - Copy', dirs_exist_ok=True)
                 else:
-                    shutil.copytree('./Instance/PixivUtil2',
+                    shutil.copytree('./Instance/PixivUtil2-master',
                                     f'./Instance/PixivUtil2 - Copy ({i})', dirs_exist_ok=True)
 
             print('Done!')

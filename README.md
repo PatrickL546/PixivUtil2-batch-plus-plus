@@ -11,6 +11,8 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 
 ## Usage
 
+### To update your instances, replace `PixivUtil2-master` with the newer version and use option [1]
+
 - Set up `config.ini`, or you can replace it with your own `config.ini`
 - Use these settings
 

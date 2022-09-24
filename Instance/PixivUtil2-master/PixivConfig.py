@@ -63,7 +63,7 @@ class PixivConfig():
         ConfigItem("Network", "timeout", 60),
         ConfigItem("Network", "retry", 3),
         ConfigItem("Network", "retryWait", 5),
-        ConfigItem("Network", "downloadDelay", 2),
+        ConfigItem("Network", "downloadDelay", 5),
         ConfigItem("Network", "checkNewVersion", True),
         ConfigItem("Network", "notifyBetaVersion", True),
         ConfigItem("Network", "openNewVersion", True),
@@ -78,6 +78,7 @@ class PixivConfig():
         ConfigItem("Debug", "dumpTagSearchPage", False),
         ConfigItem("Debug", "debugHttp", False),
         ConfigItem("Debug", "disableLog", False),
+        ConfigItem("Debug", "disableScreenClear", False),
 
         ConfigItem("IrfanView", "IrfanViewPath", r"C:\Program Files\IrfanView", followup=os.path.expanduser),
         ConfigItem("IrfanView", "startIrfanView", False),

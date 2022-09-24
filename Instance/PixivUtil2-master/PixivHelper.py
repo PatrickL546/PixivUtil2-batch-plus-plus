@@ -32,9 +32,9 @@ import mechanize
 from colorama import Fore, Style
 from PIL import Image, ImageFile
 
+import PixivArtist
 import PixivConstant
 from PixivException import PixivException
-import PixivArtist
 from PixivImage import PixivImage
 from PixivModelFanbox import FanboxArtist, FanboxPost
 
@@ -409,6 +409,8 @@ def set_console_title(title):
 
 
 def clearScreen():
+    if _config.disableScreenClear:  # Implement #1162
+        return
     if platform.system() == "Windows":
         subprocess.call('cls', shell=True)
     else:

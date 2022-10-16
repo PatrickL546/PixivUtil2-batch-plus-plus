@@ -22,6 +22,7 @@ def start_config(overwrite=None):
                 config.optionxform = str
 
                 config.add_section('Settings')
+                config.set('Settings', 'ConfigFile', 'config.ini')
                 config.set('Settings', 'FanboxCopy', '1')
                 config.set('Settings', 'PixivCopy', '1')
                 config.set('Settings', '  #Arguments should look like this: arg1, arg2, arg3', None)
@@ -77,6 +78,8 @@ def make_instances():
 
             config = load_config()
 
+            config_file = config['Settings']['ConfigFile']
+
             fanbox_copy = int(config['Settings']['FanboxCopy'])
             pixiv_copy = int(config['Settings']['PixivCopy'])
 
@@ -85,7 +88,7 @@ def make_instances():
             problematic_id = [_.strip() for _ in problematic_id]
             problematic_id = list(filter(None, problematic_id))
 
-            shutil.copy('./config.ini', './Instance/PixivUtil2-master')
+            shutil.copy(config_file, './Instance/PixivUtil2-master')
 
             print('Copied config.ini to ./Instance/PixivUtil2-master\n')
 
@@ -477,6 +480,10 @@ def re_encode_webm():
             os.system('title PixivUtil2 Batch Downloader - Re-encode webm')
             os.system('cls')
 
+            config = load_config()
+
+            config_file = config['Settings']['ConfigFile']
+
             sys.path.append('./Instance/PixivUtil2')
             try:
                 import PixivConfig
@@ -486,20 +493,20 @@ def re_encode_webm():
                 time.sleep(5)
                 sys.exit()
 
-            config = PixivConfig.PixivConfig()
-            config.loadConfig('./config.ini')
+            pixiv_config = PixivConfig.PixivConfig()
+            pixiv_config.loadConfig(config_file)
 
-            PixivHelper.set_config(config)
+            PixivHelper.set_config(pixiv_config)
 
             os.system('cls')
 
             print(f'{bcolors.WARNING}Re-encoding had been implemented in PixivUtil2\n{bcolors.ENDC}')
 
-            config.rootDirectory = input('Enter Pixiv directory: ')
+            pixiv_config.rootDirectory = input('Enter Pixiv directory: ')
 
-            for path in Path(config.rootDirectory).rglob('*.ugoira'):
+            for path in Path(pixiv_config.rootDirectory).rglob('*.ugoira'):
                 ugo_name = str(path)
-                webm_filename = f'{ugo_name[:-7]}.{config.ffmpegExt}'
+                webm_filename = f'{ugo_name[:-7]}.{pixiv_config.ffmpegExt}'
                 PixivHelper.ugoira2webm(ugo_name, webm_filename)
 
                 ts = os.path.getmtime(ugo_name)
@@ -608,6 +615,8 @@ if __name__ == '__main__':
     main()
 
     # Get value from config
+
+    # config_file = config['Settings']['ConfigFile']
 
     # fanbox_copy = int(config['Settings']['FanboxCopy'])
     # pixiv_copy = int(config['Settings']['PixivCopy'])

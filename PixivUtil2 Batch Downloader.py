@@ -88,9 +88,9 @@ def make_instances():
             problematic_id = [_.strip() for _ in problematic_id]
             problematic_id = list(filter(None, problematic_id))
 
-            shutil.copy(config_file, './Instance/PixivUtil2-master')
+            shutil.copy(config_file, './Instance/PixivUtil2-master/config.ini')
 
-            print('Copied config.ini to ./Instance/PixivUtil2-master\n')
+            print(f'Copied {config_file} to ./Instance/PixivUtil2-master/config.ini\n')
 
             try:
                 shutil.copytree('./Instance/PixivUtil2-master',

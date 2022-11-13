@@ -11,6 +11,7 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 
 - PixivUtil2 (<https://github.com/Nandaka/PixivUtil2>)
 - Read requirements of PixivUtil2
+- Additional library listed in requirements.txt
 - I have included a copy of PixivUtil2. But if you want to use other versions, just replace it, but it might not work properly
 - Windows PC
 

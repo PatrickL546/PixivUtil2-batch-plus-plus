@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from configparser import ConfigParser
 from datetime import datetime
+from random import random
 from pathlib import Path
+from time import sleep
 import subprocess
+import requests
 import shutil
 import math
-import time
 import sys
 import os
 
@@ -25,18 +27,28 @@ def start_config(overwrite=None):
                 config.set('Settings', 'ConfigFile', 'config.ini')
                 config.set('Settings', 'FanboxCopy', '1')
                 config.set('Settings', 'PixivCopy', '1')
-                config.set('Settings', '  #Arguments should look like this: arg1, arg2, arg3', None)
+                config.set('Settings', '  # Arguments should look like this: arg1, arg2, arg3', None)
                 config.set('Settings', 'FanboxArg', '-s, f5, -x')
                 config.set('Settings', 'PixivArg', '-s, 4, -f, list.txt, --is, -x')
                 config.set('Settings', 'PixivExportArg', '-s, e, -p, y, -x, --ef, PixivUtil2 export.txt')
-                config.set('Settings', '  #This removes the ###Export date: ### and ###END-OF-FILE###', None)
+                config.set('Settings', '  # This removes the ###Export date: ### and ###END-OF-FILE###', None)
                 config.set('Settings', 'Scrub', 'true')
-                config.set('Settings', '  #Archive date format', None)
+                config.set('Settings', '  # Archive date format', None)
                 config.set('Settings', 'DateFormat', '%m-%d-%Y_%H-%M-%S')
-                config.set('Settings', '  #Add ID to remove. Separate ID with comma: 1234,5678 or 1234, 5678', None)
+                config.set('Settings', '  # Add ID to remove. Separate ID with comma: 1234,5678 or 1234, 5678', None)
                 config.set('Settings', 'BlacklistID', '')
-                config.set('Settings', '  #If there are some ID that uses OAuth to continue, this groups them', None)
+                config.set('Settings', '  # If there are some ID that uses OAuth to continue, this groups them', None)
                 config.set('Settings', 'ProblematicID', '')
+                config.add_section('Follow Pixiv users')
+                config.set('Follow Pixiv users', "  # '0' for public follow '1' for private follow", None)
+                config.set('Follow Pixiv users', 'Restrict', '0')
+                config.set('Follow Pixiv users', "  # Get cookie 'PHPSESSID=12345678_Hi68n9ENAn1T7yJ1l0nTFrZL69LAntTe' <-- it looks like this", None)
+                config.set('Follow Pixiv users', '  # See https://github.com/Nandaka/PixivUtil2/blob/master/readme.md FAQ A.Q3', None)
+                config.set('Follow Pixiv users', 'Cookie', '')
+                config.set('Follow Pixiv users', "  # On Chrome press f12 -> go to Network -> follow/unfollow a user -> search for 'x-csrf-token' in Network", None)
+                config.set('Follow Pixiv users', "  # On Firefox press f12 -> go to Network > follow a user -> search for 'bookmark' in Network -> search for 'x-csrf-token' in Headers", None)
+                config.set('Follow Pixiv users', "  # It looks like this '9y054vididtxax2pu8u94gx3diohctrl'", None)
+                config.set('Follow Pixiv users', 'Token', '')
 
                 with open('./Script config.ini', 'w') as f:
                     config.write(f)
@@ -46,14 +58,13 @@ def start_config(overwrite=None):
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
             break
 
 
 def load_config():
     while True:
         try:
-            os.system('title PixivUtil2 Batch Downloader - Load config')
             os.system('cls')
 
             if not os.path.exists('./Script config.ini'):
@@ -66,7 +77,7 @@ def load_config():
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
             break
 
 
@@ -99,7 +110,7 @@ def make_instances():
                 print('Failed to copy PixivUtil2-master')
                 os.system('pause')
                 print('Going to menu...')
-                time.sleep(2)
+                sleep(2)
                 break
 
             print('Copied ./Instance/PixivUtil2-master to ./Instance/PixivUtil2\n')
@@ -137,13 +148,13 @@ def make_instances():
             print('Done!')
             os.system('pause')
             print('Going to menu...')
-            time.sleep(2)
+            sleep(2)
             break
 
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
             break
 
 
@@ -243,7 +254,7 @@ def export_followed_artist_and_process_id():
                 except KeyboardInterrupt:
                     os.system('cls')
                     print('Going to menu...')
-                    time.sleep(1)
+                    sleep(1)
                     break
 
             if problematic_id:
@@ -323,13 +334,13 @@ def export_followed_artist_and_process_id():
             print('Done!')
             os.system('pause')
             print('Going to menu...')
-            time.sleep(2)
+            sleep(2)
             break
 
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
             break
 
 
@@ -347,7 +358,7 @@ def open_id_list():
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
             break
 
 
@@ -404,7 +415,7 @@ def start_download():
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
             break
 
 
@@ -430,13 +441,13 @@ def delete_files(title, file_warning, file_delete):
             print('Done!')
             os.system('pause')
             print('Going to menu...')
-            time.sleep(2)
+            sleep(2)
             break
 
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
             break
 
 
@@ -464,13 +475,13 @@ def delete_ugoira_zip():
             print('Done!')
             os.system('pause')
             print('Going to menu...')
-            time.sleep(2)
+            sleep(2)
             break
 
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
             break
 
 
@@ -490,7 +501,7 @@ def re_encode_webm():
                 import PixivHelper
             except ModuleNotFoundError:
                 print('Cannot import PixivConfig and PixivHelper. Exiting!')
-                time.sleep(5)
+                sleep(5)
                 sys.exit()
 
             pixiv_config = PixivConfig.PixivConfig()
@@ -515,19 +526,71 @@ def re_encode_webm():
             print('Done!')
             os.system('pause')
             print('Going to menu...')
-            time.sleep(2)
+            sleep(2)
             break
 
         except KeyboardInterrupt:
             os.system('cls')
             print('Going to menu...')
-            time.sleep(1)
+            sleep(1)
+            break
+
+
+def follow_pixiv_users():
+    while True:
+        try:
+            os.system('title PixivUtil2 Batch Downloader - Follow Pixiv users')
+            os.system('cls')
+
+            config = load_config()
+
+            restrict = config['Follow Pixiv users']['Restrict']
+            cookie = config['Follow Pixiv users']['Cookie']
+            token = config['Follow Pixiv users']['Token']
+
+            while True:
+                path = input('Enter Pixiv ID list path: ')
+                print()
+
+                if not os.path.exists(path) or not os.path.isfile(path):
+                    os.system('cls')
+                    print('Error: Path does not exist or not a file\n')
+                else:
+                    break
+
+            with open(path, 'r') as f:
+                pixiv_id_list = f.read().splitlines()
+
+            for count, id in enumerate(pixiv_id_list, start=1):
+                data = {'mode': 'add', 'type': 'user', 'user_id': id, 'tag': '', 'restrict': restrict, 'format': 'json'}
+                headers = {'cookie': cookie, 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36', 'x-csrf-token': token}
+
+                r = requests.post(url='https://www.pixiv.net/bookmark_add.php', data=data, headers=headers)
+
+                if not r.status_code == 200:
+                    input('Error occured, press Enter to continue')
+                else:
+                    print(f'ID no: {count} | member url: https://www.pixiv.net/en/users/{id} | request status: {r.status_code}')
+
+                # Delay between request
+                sleep(random() * 2)
+
+            print('Done!')
+            os.system('pause')
+            print('Going to menu...')
+            sleep(2)
+            break
+
+        except KeyboardInterrupt:
+            os.system('cls')
+            print('Going to menu...')
+            sleep(1)
             break
 
 
 def main():
     while True:
-        valid_options = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'r', 'R'}
+        valid_options = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'A', 'r', 'R'}
         print(f'{bcolors.OKBLUE}Check https://github.com/PatrickL546/PixivUtil2-batch-downloader for new versions{bcolors.ENDC}')
         os.system('title PixivUtil2 Batch Downloader - Menu')
         print(f'''
@@ -541,7 +604,11 @@ def main():
 [6] Delete list
 [7] Delete pixivutil.log
 [8] Delete .ugoira zip
+
+        {bcolors.ENDC}{bcolors.BOLD}Extras{bcolors.ENDC}
+{bcolors.OKGREEN}
 [9] Re-encode webm
+[A] Follow Pixiv users
 
 {bcolors.WARNING}[R] Reset script settings{bcolors.ENDC}
 
@@ -591,6 +658,9 @@ def main():
             os.system('cls')
         elif selected == '9':
             re_encode_webm()
+            os.system('cls')
+        elif (selected == 'a' or selected == 'A'):
+            follow_pixiv_users()
             os.system('cls')
         elif (selected == 'r' or selected == 'R'):
             start_config(overwrite=True)
@@ -642,3 +712,7 @@ if __name__ == '__main__':
     # problematic_id = problematic_id.split(',')
     # problematic_id = [_.strip() for _ in problematic_id]
     # problematic_id = list(filter(None, problematic_id))
+
+    # restrict = config['Follow Pixiv users']['Restrict']
+    # cookie = config['Follow Pixiv users']['Cookie']
+    # token = config['Follow Pixiv users']['Token']

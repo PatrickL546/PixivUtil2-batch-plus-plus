@@ -2,6 +2,11 @@
 
 Simple Python scripts that I personally use for archiving with PixivUtil2
 
+## Warning
+
+- Pixiv recently limited the ammount of connections, so keep the PixivUtil2 download instance to 1
+- Fanbox is not affected by this
+
 ## Requirements
 
 - PixivUtil2 (<https://github.com/Nandaka/PixivUtil2>)
@@ -47,7 +52,11 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
     [6] Delete list
     [7] Delete pixivutil.log
     [8] Delete .ugoira zip
+
+            Extras
+
     [9] Re-encode webm
+    [A] Follow Pixiv users
 
     [R] Reset script settings
 
@@ -68,6 +77,8 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
   - This will override old webm
   - Can be modified using `[FFmpeg]` option in `config.ini` in `/Instance/PixivUtil2`
   - This can save lots of space if your webm are encoded in old settings, pre https://github.com/Nandaka/PixivUtil2/releases/tag/v20211104
+- [A] Follow Pixiv users
+  - Follows Pixiv users using PixivUtil2's exported member list. Or any ID list formatted the same way
 
 ## Credits/Contributor
 

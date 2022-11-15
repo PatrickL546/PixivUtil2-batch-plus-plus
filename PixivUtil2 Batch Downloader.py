@@ -608,7 +608,7 @@ def main():
         {bcolors.ENDC}{bcolors.BOLD}Extras{bcolors.ENDC}
 {bcolors.OKGREEN}
 [9] Re-encode webm
-[A] Follow Pixiv users
+[A] Follow Pixiv users (WIP, gets blocked, adding api library)
 
 {bcolors.WARNING}[R] Reset script settings{bcolors.ENDC}
 

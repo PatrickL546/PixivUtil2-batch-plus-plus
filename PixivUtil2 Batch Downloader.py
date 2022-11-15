@@ -565,7 +565,7 @@ def follow_pixiv_users():
                 data = {'mode': 'add', 'type': 'user', 'user_id': id, 'tag': '', 'restrict': restrict, 'format': 'json'}
                 headers = {'cookie': cookie, 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36', 'x-csrf-token': token}
 
-                r = requests.post(url='https://www.pixiv.net/bookmark_add.php', data=data, headers=headers)
+                r = requests.post(url='https://www.pixiv.net/bookmark_add.php', json=data, headers=headers)
 
                 if not r.status_code == 200:
                     input('Error occured, press Enter to continue')

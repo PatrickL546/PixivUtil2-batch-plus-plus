@@ -31,7 +31,7 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 >cookie =  
 >cookieFanbox =  
 
-- Run `PixivUtil2_batch_downloader.py` and set up `Scripts config.ini`
+- Run `PixivUtil2_batch_downloader.py` and set up `script_config.ini`
 - You can continue without restarting the script after you set it up
 - Use option [1] to make instances
 - Then [2] to export followed artists' ID
@@ -67,9 +67,9 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 - [1] Make instances
   - Copies `config.ini` to `/Instance/PixivUtil2` and create instance copies
 - [2] Export followed artist and process ID
-  - Can be modified with any export args in `Scripts config.ini`
+  - Can be modified with any export args in `script_config.ini`
 - [4] Start download
-  - Can be modified with any args in `Scripts config.ini`
+  - Can be modified with any args in `script_config.ini`
 - [6] Delete list
   - Deletes the `list.txt` and `listfanbox.txt`
 - [9] Re-encode webm

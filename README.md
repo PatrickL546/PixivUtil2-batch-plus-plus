@@ -4,8 +4,7 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 
 ## Warning
 
-- Pixiv recently limited the ammount of connections, so keep the PixivUtil2 download instance to 1
-- Fanbox is not affected by this
+- Pixiv recently limited the ammount of connections, keep the PixivUtil2 download instance to 1
 
 ## Requirements
 
@@ -41,8 +40,6 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 
 ### Menu
 
-    Check https://github.com/PatrickL546/PixivUtil2-batch-downloader for new versions
-
             Functions
 
     [1] Make instances
@@ -58,8 +55,9 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 
     [9] Re-encode webm
     [A] Follow Pixiv users
+    [B] Bookmark artworks
 
-    [R] Reset script settings
+    [R] Reset Script config
 
     Press [CTRL + C] to exit functions
     Enter [Q] to Quit
@@ -77,9 +75,11 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 - [9] Re-encode webm
   - This will override old webm
   - Can be modified using `[FFmpeg]` option in `config.ini` in `/Instance/PixivUtil2`
-  - This can save lots of space if your webm are encoded in old settings, pre https://github.com/Nandaka/PixivUtil2/releases/tag/v20211104
+  - This can save lots of space if your webm are encoded in old settings, pre [v20211104](https://github.com/Nandaka/PixivUtil2/releases/tag/v20211104)
 - [A] Follow Pixiv users
-  - Follows Pixiv users using PixivUtil2's exported member list. Or any ID list formatted the same way
+  - Follows Pixiv users using PixivUtil2's exported member list. Or any ID list formatted the same way. Add ID's to `follow_pixiv_users_list.txt`
+- [B] Bookmark artworks
+  - Add artworks to bookmarks using artworks ID list in the same format as PixivUtil2's exported member list Add ID's to `bookmark_artworks_list.txt`
 
 ## Credits/Contributor
 

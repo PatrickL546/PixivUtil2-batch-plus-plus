@@ -77,9 +77,9 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
   - Can be modified using `[FFmpeg]` option in `config.ini` in `/Instance/PixivUtil2`
   - This can save lots of space if your webm are encoded in old settings, pre [v20211104](https://github.com/Nandaka/PixivUtil2/releases/tag/v20211104)
 - [A] Follow Pixiv users
-  - Follows Pixiv users using PixivUtil2's exported member list. Or any ID list formatted the same way. Add ID's to `follow_pixiv_users_list.txt`
+  - Follows Pixiv users using PixivUtil2's exported member list. Or any ID list formatted the same way. Add IDs to `follow_pixiv_users_list.txt`
 - [B] Bookmark artworks
-  - Add artworks to bookmarks using artworks ID list in the same format as PixivUtil2's exported member list Add ID's to `bookmark_artworks_list.txt`
+  - Add artworks to bookmarks using artworks ID list in the same format as PixivUtil2's exported member list Add IDs to `bookmark_artworks_list.txt`
 
 ## Credits/Contributor
 

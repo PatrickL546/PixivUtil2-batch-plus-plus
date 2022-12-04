@@ -42,6 +42,11 @@ def start_config(overwrite=None, update=None):
                 config.set('Settings', '# Run ProblematicID for Fanbox or Pixiv', None)
                 config.set('Settings', 'RunProblematicIDFanbox', 'true')
                 config.set('Settings', 'RunProblematicIDPixiv', 'true')
+                config.add_section('Extras')
+                config.set('Extras', 'FollowPixivUsersVisibility', 'public')
+                config.set('Extras', 'BookmarkArtworksVisibility', 'public')
+                config.set('Extras', 'RefreshToken', '')
+
                 if update:
                     config.read('./script_config.ini')
 
@@ -541,6 +546,141 @@ def re_encode_webm():
             break
 
 
+def login(config):
+    refresh_token = config['Extras']['RefreshToken']
+
+    to_continue = True
+    if refresh_token:
+        try:
+            print('Trying to login via saved Script config RefreshToken...')
+
+            api = pixivpy3.AppPixivAPI()
+            api.auth(refresh_token=refresh_token)
+
+            return to_continue, api
+        except pixivpy3.PixivError:
+            print('Failed to authenticate...')
+            sleep(2)
+            os.system('cls')
+
+    sys.path.append('./Instance/PixivUtil2')
+    try:
+        import PixivOAuthBrowser
+    except ModuleNotFoundError:
+        print('Cannot import PixivOAuthBrowser')
+        os.system('pause')
+        print('Going to menu...')
+        sleep(2)
+        to_continue = False
+        api = None
+        return to_continue, api
+
+    while True:
+        login_response = PixivOAuthBrowser.login()
+        os.system('cls')
+        if login_response.status_code == 200:
+            break
+        else:
+            print('Failed to authenticate...')
+            sleep(2)
+            os.system('cls')
+
+    json_login_response = json.loads(login_response.text)
+    refresh_token = json_login_response['refresh_token']
+
+    try:
+        api = pixivpy3.AppPixivAPI()
+        api.auth(refresh_token=refresh_token)
+    except pixivpy3.PixivError:
+        print('Failed to authenticate...')
+        sleep(2)
+        to_continue = False
+        api = None
+        return to_continue, api
+
+    # Add refresh_token to script_config.ini
+    config.set('Extras', 'RefreshToken', f'{refresh_token}')
+
+    with open('./script_config.ini', 'w') as f:
+        config.write(f)
+
+    start_config(update=True)
+
+    return to_continue, api
+
+
+def follow_pixiv_users_and_bookmark_artworks(title, list_file, menu, menu_select_1, menu_select_2, function_run_1, function_run_2):
+    while True:
+        try:
+            os.system(title)
+            os.system('cls')
+
+            config = load_config()
+
+            follow_pixiv_users_visibility = config['Extras']['FollowPixivUsersVisibility']
+            bookmark_artworks_visibility = config['Extras']['BookmarkArtworksVisibility']
+
+            if not os.path.exists(list_file):
+                with open(list_file, 'w') as f:
+                    f.write('')
+
+            to_continue, api = login(config)
+
+            if not to_continue:
+                break
+
+            os.system('cls')
+            print(f'{bcolors.OKGREEN}Login success!{bcolors.ENDC}')
+            sleep(2)
+            os.system('cls')
+
+            while True:
+                valid_options = {'1', '2'}
+                print(menu)
+
+                selected = input('Input: ')
+
+                if (selected == 'q' or selected == 'Q'):
+                    break
+                elif selected not in valid_options:
+                    os.system('cls')
+                    print(f'{bcolors.FAIL}Please select a valid option{bcolors.ENDC}')
+                elif selected == '1':
+                    print(menu_select_1)
+
+                    with open(list_file, 'r') as f:
+                        list = f.read().splitlines()
+
+                    for item in list:
+                        exec(function_run_1)
+
+                    print('Done!')
+                    sleep(2)
+                    os.system('cls')
+                elif selected == '2':
+                    print(menu_select_2)
+
+                    with open(list_file, 'r') as f:
+                        list = f.read().splitlines()
+
+                    for item in list:
+                        exec(function_run_2)
+
+                    print('Done!')
+                    sleep(2)
+                    os.system('cls')
+
+            print('Going to menu...')
+            sleep(2)
+            break
+
+        except KeyboardInterrupt:
+            os.system('cls')
+            print('Going to menu...')
+            sleep(2)
+            break
+
+
 def main(version):
     while True:
         try:
@@ -623,10 +763,38 @@ def main(version):
             re_encode_webm()
             os.system('cls')
         elif (selected == 'a' or selected == 'A'):
-            follow_pixiv_users()
+            title = f'title PixivUtil2 Batch Downloader {version} - Follow Pixiv users'
+            list_file = './follow_pixiv_users_list.txt'
+            menu = f'''
+    {bcolors.BOLD}Menu{bcolors.ENDC}
+{bcolors.OKGREEN}
+[1] Follow Pixiv users in the list
+[2] Unfollow Pixiv users in the list
+
+{bcolors.FAIL}Enter [Q] to Exit{bcolors.ENDC}
+'''
+            menu_select_1 = 'Following Pixiv users'
+            menu_select_2 = 'Unfollowing Pixiv users'
+            function_run_1 = 'api.user_follow_add(item, follow_pixiv_users_visibility)'
+            function_run_2 = 'api.user_follow_delete(item)'
+            follow_pixiv_users_and_bookmark_artworks(title, list_file, menu, menu_select_1, menu_select_2, function_run_1, function_run_2)
             os.system('cls')
         elif (selected == 'b' or selected == 'B'):
-            bookmark_artworks()
+            title = f'title PixivUtil2 Batch Downloader {version} - Bookmark artworks'
+            list_file = './bookmark_artworks_list.txt'
+            menu = f'''
+    {bcolors.BOLD}Menu{bcolors.ENDC}
+{bcolors.OKGREEN}
+[1] Add bookmark artworks in the list
+[2] Delete bookmark artworks in the list
+
+{bcolors.FAIL}Enter [Q] to Exit{bcolors.ENDC}
+'''
+            menu_select_1 = 'Adding bookmark artworks'
+            menu_select_2 = 'Deleting bookmark artworks'
+            function_run_1 = 'api.illust_bookmark_add(item, bookmark_artworks_visibility)'
+            function_run_2 = 'api.illust_bookmark_delete(item)'
+            follow_pixiv_users_and_bookmark_artworks(title, list_file, menu, menu_select_1, menu_select_2, function_run_1, function_run_2)
             os.system('cls')
         elif (selected == 'r' or selected == 'R'):
             start_config(overwrite=True)
@@ -682,3 +850,8 @@ if __name__ == '__main__':
 
     # run_problematic_id_fanbox = config['Settings']['RunProblematicIDFanbox']
     # run_problematic_id_pixiv = config['Settings']['RunProblematicIDPixiv']
+
+    # follow_pixiv_users_visibility = config['Extras']['FollowPixivUsersVisibility']
+    # bookmark_artworks_visibility = config['Extras']['BookmarkArtworksVisibility']
+
+    # refresh_token = config['Extras']['RefreshToken']

@@ -1,1 +1,2 @@
 PixivPy3==3.7.2
+requests==2.28.1

@@ -803,7 +803,7 @@ def main(version):
 
 
 if __name__ == '__main__':
-    version = 'v2022'
+    version = 'v20221204'
     os.system('color')
 
     class bcolors:

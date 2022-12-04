@@ -92,8 +92,8 @@ class PixivConfig():
         ConfigItem("Settings", "downloadAvatar", False),
         ConfigItem("Settings", "useSuppressTags", False),
         ConfigItem("Settings", "tagsLimit", -1),
-        ConfigItem("Settings", "writeImageInfo", False),
         ConfigItem("Settings", "writeImageJSON", False),
+        ConfigItem("Settings", "writeImageInfo", False),
         ConfigItem("Settings", "writeRawJSON", False),
         ConfigItem("Settings", "RawJSONFilter",
                    "id,title,description,alt,userIllusts,storableTags,zoneConfig,extraData,comicPromotion,fanboxPromotion"),
@@ -177,29 +177,30 @@ class PixivConfig():
         ConfigItem("FFmpeg", "ffmpeg", "ffmpeg.exe"),
         ConfigItem("FFmpeg", "ffmpegCodec", "libvpx-vp9"),
         ConfigItem("FFmpeg", "ffmpegExt", "webm"),
-        ConfigItem("FFmpeg", "ffmpegParam", "-row-mt 1 -deadline good -crf 20 -vsync 2 -r 999 -pix_fmt yuv420p"),
+        ConfigItem("FFmpeg", "ffmpegParam", "-lossless 0 -crf 15 -b 0 -vsync 0"),
         ConfigItem("FFmpeg", "webpCodec", "libwebp"),
-        ConfigItem("FFmpeg", "webpParam", "-row-mt 1 -lossless 0 -q:v 90 -loop 0 -vsync 2 -r 999"),
+        ConfigItem("FFmpeg", "webpParam", "-lossless 0 -compression_level 5 -quality 100 -loop 0 -vsync 0"),
         ConfigItem("FFmpeg", "gifParam",
-                   "-filter_complex [0:v]split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle"),
-        ConfigItem("FFmpeg", "apngParam", "-vf setpts=PTS-STARTPTS,hqdn3d=1.5:1.5:6:6 -plays 0"),
+                   "-filter_complex [0:v]split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle -vsync 0"),
+        ConfigItem("FFmpeg", "apngParam", "-plays 0 -vsync 0"),
         ConfigItem("FFmpeg", "verboseOutput", False),
 
         ConfigItem("Ugoira", "writeUgoiraInfo", False),
         ConfigItem("Ugoira", "createUgoira", False),
-        ConfigItem("Ugoira", "deleteZipFile", False),
+        ConfigItem("Ugoira", "createWebm", False),
+        ConfigItem("Ugoira", "createWebp", False),
         ConfigItem("Ugoira", "createGif", False),
         ConfigItem("Ugoira", "createApng", False),
         ConfigItem("Ugoira", "deleteUgoira", False),
-        ConfigItem("Ugoira", "createWebm", False),
-        ConfigItem("Ugoira", "createWebp", False),
+        ConfigItem("Ugoira", "deleteZipFile", False),
 
         ConfigItem("DownloadControl", "minFileSize", 0),
         ConfigItem("DownloadControl", "maxFileSize", 0),
+        ConfigItem("DownloadControl", "checkLastModified", True),
+        ConfigItem("DownloadControl", "alwaysCheckFileSize", False),
         ConfigItem("DownloadControl", "overwrite", False),
         ConfigItem("DownloadControl", "backupOldFile", False),
         ConfigItem("DownloadControl", "dayLastUpdated", 7),
-        ConfigItem("DownloadControl", "alwaysCheckFileSize", False),
         ConfigItem("DownloadControl", "checkUpdatedLimit", 0),
         ConfigItem("DownloadControl", "useBlacklistTags", False),
         ConfigItem("DownloadControl", "useBlacklistTitles", False),
@@ -208,7 +209,6 @@ class PixivConfig():
         ConfigItem("DownloadControl", "enableInfiniteLoop", False),
         ConfigItem("DownloadControl", "useBlacklistMembers", False),
         ConfigItem("DownloadControl", "downloadResized", False),
-        ConfigItem("DownloadControl", "checkLastModified", True),
         ConfigItem("DownloadControl", "skipUnknownSize", False),
         ConfigItem("DownloadControl", "enablePostProcessing", False),
         ConfigItem("DownloadControl", "postProcessingCmd", ""),
@@ -223,7 +223,7 @@ class PixivConfig():
         value = getattr(self, "proxyAddress", None)
         if not value:
             return None
-        match = re.match(r"^(?:(https?|socks[45])://)?([\w.-]+)(:\d+)?$", value)
+        match = re.match(r"^(?:(https?|socks[45]h?)://)?([\w.-]+)(:\d+)?$", value)
         if not match:
             return None
         scheme, netloc, port = match.groups()

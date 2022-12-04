@@ -186,6 +186,7 @@ def export_followed_artist_and_process_id():
             problematic_id = [_.strip() for _ in problematic_id]
             problematic_id = list(filter(None, problematic_id))
 
+            to_quit = False
             while True:
                 config = load_config()
                 valid_options = {'1', '2', '3'}

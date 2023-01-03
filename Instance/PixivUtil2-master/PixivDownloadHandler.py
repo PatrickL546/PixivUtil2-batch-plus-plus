@@ -85,7 +85,7 @@ def download_image(caller,
                     remote_file_size = get_remote_filesize(url, referer, config, notifier)
                 else:
                     remote_file_size = -1
-                    PixivHelper.print_and_log(None, f"\rSkipped getting remote file size because local file not exists")
+                    # PixivHelper.print_and_log(None, "\rSkipped getting remote file size because local file not exists")
 
                 # 837
                 if config.skipUnknownSize and is_exists and remote_file_size == -1:
@@ -335,7 +335,7 @@ def perform_download(url, file_size, filename, overwrite, config, referer=None, 
     if referer is None:
         referer = config.referer
     # actual download
-    PixivHelper.print_and_log(None, '\rStart downloading...', newline=False)
+    # PixivHelper.print_and_log(None, '\rStart downloading...', newline=False)
     # fetch filesize
     req = PixivHelper.create_custom_request(url, config, referer)
     br = PixivBrowserFactory.getBrowser(config=config)
@@ -359,7 +359,7 @@ def get_remote_filesize(url, referer, config, notifier=None):
     if notifier is None:
         notifier = PixivHelper.dummy_notifier
 
-    PixivHelper.print_and_log(None, 'Getting remote filesize...')
+    PixivHelper.print_and_log(None, 'Getting remote filesize...', newline=False)
     # open with HEAD method, might be expensive
     req = PixivHelper.create_custom_request(url, config, referer, head=True)
     file_size = -1
@@ -371,19 +371,19 @@ def get_remote_filesize(url, referer, config, notifier=None):
         if content_length is not None:
             file_size = int(content_length)
         else:
-            PixivHelper.print_and_log('info', "\tNo file size information!")
+            PixivHelper.print_and_log('info', "\rNo file size information!")
         res.close()
     except KeyError:
-        PixivHelper.print_and_log('info', "\tNo file size information!")
+        PixivHelper.print_and_log('info', "\rNo file size information!")
     except mechanize.HTTPError as e:
         # fix Issue #503
         # handle http errors explicit by code
         if int(e.code) in (404, 500):
-            PixivHelper.print_and_log('info', "\tNo file size information!")
+            PixivHelper.print_and_log('info', "\rNo file size information!")
         else:
             raise
 
-    PixivHelper.print_and_log(None, f"Remote filesize = {PixivHelper.size_in_str(file_size)} ({file_size} Bytes)")
+    PixivHelper.print_and_log(None, f"\rRemote filesize = {PixivHelper.size_in_str(file_size)} ({file_size} Bytes)")
     return file_size
 
 
@@ -426,12 +426,21 @@ def handle_ugoira(image, zip_filename, config, notifier):
                                     codec=config.ffmpegCodec,
                                     extension=config.ffmpegExt,
                                     image=image)
+
     if config.createWebp:
         webp_filename = ugo_name[:-7] + ".webp"
         if not os.path.exists(webp_filename):
             PixivHelper.ugoira2webp(ugo_name,
                                     webp_filename,
                                     image=image)
+
+    if config.createMkv:
+        mkv_filename = ugo_name[:-7] + ".mkv"
+        if not os.path.exists(mkv_filename):
+            PixivHelper.ugoira2mkv(ugo_name,
+                                   mkv_filename,
+                                   codec=config.mkvCodec,
+                                   image=image)
 
     if config.deleteZipFile and os.path.exists(zip_filename) and zip_filename.endswith(".zip"):
         PixivHelper.print_and_log('info', f"Deleting zip file => {zip_filename}")

@@ -339,21 +339,30 @@ Please refer run with `--help` for latest information.
 - numberofpage
 
   Number of page to be processed, put `0` to process all pages.
+  
 - r18mode
 
   Only list images tagged R18, for member, member's bookmark, and search by tag. Set to `True` to enable.
+
 - r18Type
 
-  0: All; 1: R18; 2: R18G
+  Allow filtering for R-18 type (R-18 or R-18G)
+  Set `r18Type` with value `0` = both R18 and R-18G, `1` = only R18, or `2` = only R18G
+
 - dateformat
 
   Pixiv DateTime format, leave blank to use default format (YYYY-MM-DD).
   Refer to http://strftime.org/ for syntax. Quick Reference:
   - %d = Day, %m = Month, %Y = Year (4 digit)
   - %H = Hour (24h), %M = Minute, %S = Seconds
+
 - autoAddMember
 
   Automatically save member id to db for all download.
+
+- aiDisplayFewer
+
+  if true, filter out AI-generated images from downloading.
 
 ## [FANBOX]
 - filenameFormatFanboxContent
@@ -506,19 +515,20 @@ Please refer run with `--help` for latest information.
   Use -1 to use all tags.
 - writeImageJSON
 
-  Set to `True` to export the entire original information for the image from the source to JSON.
+  Set to `True` to export the compact image information to JSON file.
   The filename is following `filename(Manga)Infoformat` + .json.
+  If you want the original info from source, use with `writeRawJSON`.
 - writeimageinfo
 
-  Set to `True` to export the image information to text file. This is a subset info extracted from the `writeImageJSON`.
+  Set to `True` to export the compact image information to text file.
   The filename is following `filename(Manga)Infoformat` + .txt.
+  If you want the original info from source, use with `writeRawJSON`.
 - writeRawJSON
 
-  Set to `True` to export the image JSON untouched.
-  The filename is following `filename(Manga)Infoformat` + .json.
+  Set to `True` to export the original JSON untouched of the image for `writeImageJSON`.
 - RawJSONFilter
 
-  Enter the JSON keys which you want to filter out. Keys are seperated by a comma.
+  Enter the JSON keys which you want to filter out for `writeRawJSON`. Keys are seperated by a comma.
 - includeSeriesJSON
 
   Set to `True` to export the series information to JSON. Non-series artwork doesn't have this info.
@@ -549,7 +559,7 @@ Please refer run with `--help` for latest information.
   Set last modified timestamp based on pixiv upload timestamp to the file.
 - useLocalTimezone
 
-  Use local timezone when setting last modified timestamp/works date.
+  Use local timezone in the .txt file of `writeimageinfo` and .XMP file of `writeImageXMP`.
 - defaultSketchOption
 
   Skip the "Include Pixiv Sketch" prompt when downloading by `member_id` option by using a default option. Set the value to `y` to always include sketches or `n` to exclude sketches from the download.
@@ -612,6 +622,26 @@ Please refer run with `--help` for latest information.
 
   Skip downloading if the remote size is not known when `alwaysCheckFileSize` is set to True.
 
+- enablePostProcessing
+  
+  If true, it enabled post processing cmd for every downloaded files. Default: False.
+
+- postProcessingCmd
+
+  command to execute. add %filename% to pass the downloaded filename.
+  **NO ERROR HANDLING AT ALL, use on your own risk.**
+
+- extensionFilter
+
+  Provide a | seperated list of acceptable file extensions to download. Eg. jpg|png|gif|ugoira
+
+- downloadBuffer
+
+  Download buffer before it write to disk in kiloByte, default is 512kB.
+  You can change it based on your download speed. Mainly useful for smoother progress bar.
+  Usually no need to change this value.
+
+
 ## [FFmpeg]
 - ffmpeg
 
@@ -625,6 +655,12 @@ Please refer run with `--help` for latest information.
 - ffmpegparam
 
   Parameter to be used to encode webm, default: `-lossless 0 -crf 15 -b 0 -vsync 0`.
+- mkvcodec
+
+  Codec to be used for encoding mkv, default is using `copy`.
+- mkvparam
+
+  Parameter to be used to encode mkv, default: ` `.
 - webpcodec
 
   Codec to be used for encoding webm, default is using `libwebp`.
@@ -640,6 +676,10 @@ Please refer run with `--help` for latest information.
 
   If set to `True`, it will create .ugoira file.
   This is Pixiv own format for animated images. You can use Honeyview to see the animation.
+- createmkv
+
+  Set to True to create mkv file (video format). The default settings is lossless(no encoding), it will pack the images in the container. Very large file size.
+  Required `createUgoira = True` and ffmpeg executeable.
 - createwebm
 
   Set to True to create webm file (video format). The default encoding settings is lossy encoding but high quality with smallest file size.
@@ -658,10 +698,10 @@ Please refer run with `--help` for latest information.
   Required `createUgoira = True` and ffmpeg executeable.
 - deleteugoira
 
-  Set to True to delete original ugoira after conversion.
+  Set to True to delete the created .ugoira after conversion.
 - deleteZipFile
 
-  If set to `True`, it will delete the zip files from ugoira.
+  If set to `True`, it will delete the orignal .zip (i.e. the actual image) file.
   Only active if `createUgoira = True`.
 
 ## [Filename]

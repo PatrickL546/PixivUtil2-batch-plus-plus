@@ -37,7 +37,8 @@ def process_image(caller,
                   useblacklist=True,
                   reencoding=False,
                   manga_series_order=-1,
-                  manga_series_parent=None) -> int:
+                  manga_series_parent=None,
+                  ui_prefix="") -> int:
     # caller function/method
     # TODO: ideally to be removed or passed as argument
     db: PixivDBManager = caller.__dbManager__
@@ -57,7 +58,7 @@ def process_image(caller,
     filename = f'no-filename-{image_id}.tmp'
 
     try:
-        msg = Fore.YELLOW + Style.NORMAL + f'Processing Image Id: {image_id}' + Style.RESET_ALL
+        msg = ui_prefix + Fore.YELLOW + Style.NORMAL + f'Processing Image Id: {image_id}' + Style.RESET_ALL
         PixivHelper.print_and_log(None, msg)
         notifier(type="IMAGE", message=msg)
 
@@ -117,6 +118,12 @@ def process_image(caller,
             return PixivConstant.PIXIVUTIL_NOT_OK
 
         download_image_flag = True
+
+        # feature #1189 AI filtering
+        if config.aiDisplayFewer and image.ai_type == 2:
+            PixivHelper.print_and_log('warn', f'Skipping image_id: {image_id} – blacklisted due to aiDisplayFewer is set to True and aiType = {image.ai_type}.')
+            download_image_flag = False
+            result = PixivConstant.PIXIVUTIL_SKIP_BLACKLIST
 
         # date validation and blacklist tag validation
         if config.dateDiff > 0:
@@ -192,19 +199,19 @@ def process_image(caller,
 
         if download_image_flag:
             if artist is None:
-                PixivHelper.print_and_log(None, f'Member Name  : {image.artist.artistName}')
-                PixivHelper.print_and_log(None, f'Member Avatar: {image.artist.artistAvatar}')
-                PixivHelper.print_and_log(None, f'Member Token : {image.artist.artistToken}')
-                PixivHelper.print_and_log(None, f'Member Background : {image.artist.artistBackground}')
+                PixivHelper.print_and_log(None, f'{Fore.LIGHTCYAN_EX}{"Member Name":14}:{Style.RESET_ALL} {image.artist.artistName}')
+                PixivHelper.print_and_log(None, f'{Fore.LIGHTCYAN_EX}{"Member Avatar":14}:{Style.RESET_ALL} {image.artist.artistAvatar}')
+                PixivHelper.print_and_log(None, f'{Fore.LIGHTCYAN_EX}{"Member Token":14}:{Style.RESET_ALL} {image.artist.artistToken}')
+                PixivHelper.print_and_log(None, f'{Fore.LIGHTCYAN_EX}{"Member Backgrd":14}:{Style.RESET_ALL} {image.artist.artistBackground}')
 
-            PixivHelper.print_and_log(None, f"Title: {image.imageTitle}")
+            PixivHelper.print_and_log(None, f"{Fore.LIGHTCYAN_EX}{'Title':10}:{Style.RESET_ALL} {image.imageTitle}")
             if len(image.translated_work_title) > 0:
-                PixivHelper.print_and_log(None, f"Translated Title: {image.translated_work_title}")
-            tags_str = ', '.join(image.imageTags)
-            PixivHelper.print_and_log(None, f"Tags : {tags_str}")
-            PixivHelper.print_and_log(None, f"Date : {image.worksDateDateTime}")
-            PixivHelper.print_and_log(None, f"Mode : {image.imageMode}")
-            PixivHelper.print_and_log(None, f"Bookmark Count : {image.bookmark_count}")
+                PixivHelper.print_and_log(None, f"{Fore.LIGHTCYAN_EX}{'TL-ed Title':10}: {image.translated_work_title}")
+            tags_str = ', '.join(image.imageTags).replace("AI-generated", f"{Fore.LIGHTYELLOW_EX}AI-generated{Style.RESET_ALL}")
+            PixivHelper.print_and_log(None, f"{Fore.LIGHTCYAN_EX}{'Tags':10}:{Style.RESET_ALL} {tags_str}")
+            PixivHelper.print_and_log(None, f"{Fore.LIGHTCYAN_EX}{'Date':10}:{Style.RESET_ALL} {image.worksDateDateTime}")
+            PixivHelper.print_and_log(None, f"{Fore.LIGHTCYAN_EX}{'Mode':10}:{Style.RESET_ALL} {image.imageMode}")
+            PixivHelper.print_and_log(None, f"{Fore.LIGHTCYAN_EX}{'Bookmarks':10}:{Style.RESET_ALL} {image.bookmark_count}")
 
             if config.useSuppressTags:
                 for item in caller.__suppressTags:
@@ -213,7 +220,7 @@ def process_image(caller,
 
             # get manga page
             if image.imageMode == 'manga':
-                PixivHelper.print_and_log(None, f"Page Count : {image.imageCount}")
+                PixivHelper.print_and_log(None, f"{Fore.LIGHTCYAN_EX}{'Pages':10}:{Style.RESET_ALL} {image.imageCount}")
 
             if user_dir == '':  # Yavos: use config-options
                 target_dir = config.rootDirectory
@@ -233,79 +240,83 @@ def process_image(caller,
             if caller.DEBUG_SKIP_DOWNLOAD_IMAGE:
                 return PixivConstant.PIXIVUTIL_OK
 
+            current_img = 1
+            total = len(source_urls)
             for img in source_urls:
-                PixivHelper.print_and_log(None, f'Image URL : {img}')
+                prefix = f"{Fore.CYAN}[{current_img}/{total}]{Style.RESET_ALL} "
+                PixivHelper.print_and_log(None, f'{prefix}Image URL : {img}')
                 url = os.path.basename(img)
-                split_url = url.split('.')
-                if split_url[0].startswith(str(image_id)):
+                # split_url = url.split('.')
+                # if split_url[0].startswith(str(image_id)):
+                filename_format = config.filenameFormat
+                if image.imageMode == 'manga':
+                    filename_format = config.filenameMangaFormat
 
-                    filename_format = config.filenameFormat
+                filename = PixivHelper.make_filename(filename_format,
+                                                        image,
+                                                        tagsSeparator=config.tagsSeparator,
+                                                        tagsLimit=config.tagsLimit,
+                                                        fileUrl=url,
+                                                        bookmark=bookmark,
+                                                        searchTags=search_tags,
+                                                        useTranslatedTag=config.useTranslatedTag,
+                                                        tagTranslationLocale=config.tagTranslationLocale)
+                filename = PixivHelper.sanitize_filename(filename, target_dir)
+
+                if image.imageMode == 'manga' and config.createMangaDir:
+                    manga_page = __re_manga_page.findall(filename)
+                    if len(manga_page) > 0:
+                        splitted_filename = filename.split(manga_page[0][0], 1)
+                        splitted_manga_page = manga_page[0][0].split("_p", 1)
+                        # filename = splitted_filename[0] + splitted_manga_page[0] + os.sep + "_p" + splitted_manga_page[1] + splitted_filename[1]
+                        filename = f"{splitted_filename[0]}{splitted_manga_page[0]}{os.sep}_p{splitted_manga_page[1]}{splitted_filename[1]}"
+
+                PixivHelper.print_and_log('info', f'{prefix}Filename  : {filename}')
+
+                result = PixivConstant.PIXIVUTIL_NOT_OK
+                try:
+                    (result, filename) = PixivDownloadHandler.download_image(caller,
+                                                                                img,
+                                                                                filename,
+                                                                                referer,
+                                                                                config.overwrite,
+                                                                                config.retry,
+                                                                                config.backupOldFile,
+                                                                                image,
+                                                                                page,
+                                                                                notifier)
+
+                    if result == PixivConstant.PIXIVUTIL_NOT_OK:
+                        PixivHelper.print_and_log('error', f'Image url not found/failed to download: {image.imageId}')
+                    elif result == PixivConstant.PIXIVUTIL_KEYBOARD_INTERRUPT:
+                        raise KeyboardInterrupt()
+
+                    manga_files.append((image_id, page, filename))
+                    page = page + 1
+
+                except urllib.error.URLError:
+                    PixivHelper.print_and_log('error', f'Error when download_image(), giving up url: {img}')
+                PixivHelper.print_and_log(None, '')
+
+                # XMP image info per images
+                if config.writeImageXMPPerImage:
+                    filename_info_format = config.filenameInfoFormat or config.filenameFormat
+                    # Issue #575
                     if image.imageMode == 'manga':
-                        filename_format = config.filenameMangaFormat
-
-                    filename = PixivHelper.make_filename(filename_format,
-                                                         image,
-                                                         tagsSeparator=config.tagsSeparator,
-                                                         tagsLimit=config.tagsLimit,
-                                                         fileUrl=url,
-                                                         bookmark=bookmark,
-                                                         searchTags=search_tags,
-                                                         useTranslatedTag=config.useTranslatedTag,
-                                                         tagTranslationLocale=config.tagTranslationLocale)
-                    filename = PixivHelper.sanitize_filename(filename, target_dir)
-
-                    if image.imageMode == 'manga' and config.createMangaDir:
-                        manga_page = __re_manga_page.findall(filename)
-                        if len(manga_page) > 0:
-                            splitted_filename = filename.split(manga_page[0][0], 1)
-                            splitted_manga_page = manga_page[0][0].split("_p", 1)
-                            # filename = splitted_filename[0] + splitted_manga_page[0] + os.sep + "_p" + splitted_manga_page[1] + splitted_filename[1]
-                            filename = f"{splitted_filename[0]}{splitted_manga_page[0]}{os.sep}_p{splitted_manga_page[1]}{splitted_filename[1]}"
-
-                    PixivHelper.print_and_log('info', f'Filename  : {filename}')
-
-                    result = PixivConstant.PIXIVUTIL_NOT_OK
-                    try:
-                        (result, filename) = PixivDownloadHandler.download_image(caller,
-                                                                                 img,
-                                                                                 filename,
-                                                                                 referer,
-                                                                                 config.overwrite,
-                                                                                 config.retry,
-                                                                                 config.backupOldFile,
-                                                                                 image,
-                                                                                 page,
-                                                                                 notifier)
-
-                        if result == PixivConstant.PIXIVUTIL_NOT_OK:
-                            PixivHelper.print_and_log('error', f'Image url not found/failed to download: {image.imageId}')
-                        elif result == PixivConstant.PIXIVUTIL_KEYBOARD_INTERRUPT:
-                            raise KeyboardInterrupt()
-
-                        manga_files.append((image_id, page, filename))
-                        page = page + 1
-
-                    except urllib.error.URLError:
-                        PixivHelper.print_and_log('error', f'Error when download_image(), giving up url: {img}')
-                    PixivHelper.print_and_log(None, '')
-
-                    if config.writeImageXMPPerImage:
-                        filename_info_format = config.filenameInfoFormat or config.filenameFormat
-                        # Issue #575
-                        if image.imageMode == 'manga':
-                            filename_info_format = config.filenameMangaInfoFormat or config.filenameMangaFormat or filename_info_format
-                        info_filename = PixivHelper.make_filename(filename_info_format,
-                                                                    image,
-                                                                    tagsSeparator=config.tagsSeparator,
-                                                                    tagsLimit=config.tagsLimit,
-                                                                    fileUrl=url,
-                                                                    appendExtension=False,
-                                                                    bookmark=bookmark,
-                                                                    searchTags=search_tags,
-                                                                    useTranslatedTag=config.useTranslatedTag,
-                                                                    tagTranslationLocale=config.tagTranslationLocale)
-                        info_filename = PixivHelper.sanitize_filename(info_filename + ".xmp", target_dir)
-                        image.WriteXMP(info_filename)
+                        filename_info_format = config.filenameMangaInfoFormat or config.filenameMangaFormat or filename_info_format
+                    info_filename = PixivHelper.make_filename(filename_info_format,
+                                                                image,
+                                                                tagsSeparator=config.tagsSeparator,
+                                                                tagsLimit=config.tagsLimit,
+                                                                fileUrl=url,
+                                                                appendExtension=False,
+                                                                bookmark=bookmark,
+                                                                searchTags=search_tags,
+                                                                useTranslatedTag=config.useTranslatedTag,
+                                                                tagTranslationLocale=config.tagTranslationLocale)
+                    info_filename = PixivHelper.sanitize_filename(info_filename + ".xmp", target_dir)
+                    image.WriteXMP(info_filename, config.useTranslatedTag, config.tagTranslationLocale)
+                current_img = current_img + 1
 
             if config.writeImageInfo or config.writeImageJSON or config.writeImageXMP:
                 filename_info_format = config.filenameInfoFormat or config.filenameFormat
@@ -322,25 +333,23 @@ def process_image(caller,
                                                           searchTags=search_tags,
                                                           useTranslatedTag=config.useTranslatedTag,
                                                           tagTranslationLocale=config.tagTranslationLocale)
-                # trim _pXXX
-                info_filename = re.sub(r'_p?\d+$', '', info_filename)
+                if image.imageMode == 'manga':
+                    # trim _pXXX for manga
+                    info_filename = re.sub(r'_p?\d+$', '', info_filename)
                 info_filename = PixivHelper.sanitize_filename(info_filename + ".infoext", target_dir)
                 if config.writeImageInfo:
                     image.WriteInfo(info_filename[:-8] + ".txt")
                 if config.writeImageJSON:
-                    image.WriteJSON(info_filename[:-8] + ".json", config.RawJSONFilter)
+                    image.WriteJSON(info_filename[:-8] + ".json", config.RawJSONFilter, config.useTranslatedTag, config.tagTranslationLocale)
                 if config.includeSeriesJSON and image.seriesNavData and image.seriesNavData['seriesId'] not in caller.__seriesDownloaded:
-                    json_filename = PixivHelper.make_filename(config.filenameSeriesJSON,
-                                                              image,
-                                                              fileUrl=url,
-                                                              appendExtension=False
-                                                              )
-                    # trim _pXXX
-                    json_filename = re.sub(r'_p?\d+$', '', json_filename)
+                    json_filename = PixivHelper.make_filename(config.filenameSeriesJSON, image, fileUrl=url, appendExtension=False)
+                    if image.imageMode == 'manga':
+                        # trim _pXXX for manga
+                        json_filename = re.sub(r'_p?\d+$', '', json_filename)
                     json_filename = PixivHelper.sanitize_filename(json_filename + ".json", target_dir)
                     image.WriteSeriesData(image.seriesNavData['seriesId'], caller.__seriesDownloaded, json_filename)
                 if config.writeImageXMP and not config.writeImageXMPPerImage:
-                    image.WriteXMP(info_filename[:-8] + ".xmp")
+                    image.WriteXMP(info_filename[:-8] + ".xmp", config.useTranslatedTag, config.tagTranslationLocale)
 
             if image.imageMode == 'ugoira_view':
                 if config.writeUgoiraInfo:
@@ -377,7 +386,6 @@ def process_image(caller,
         if parse_medium_page is not None:
             del parse_medium_page
         gc.collect()
-        PixivHelper.print_and_log(None, '\n')
 
         return result
     except Exception as ex:
@@ -484,6 +492,7 @@ def process_ugoira_local(caller, config):
                             file_basename = os.path.basename(file)
                             file_ext = os.path.splitext(file_basename)[1]
                             if ((("gif" in file_ext) and (config.createGif))
+                               or (("mkv" in file_ext) and (config.createMkv))
                                or (("png" in file_ext) and (config.createApng))
                                or (("webm" in file_ext) and (config.createWebm))
                                or (("webp" in file_ext) and (config.createWebp))

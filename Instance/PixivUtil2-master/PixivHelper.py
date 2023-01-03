@@ -285,7 +285,7 @@ def make_filename(nameFormat: str,
     # 701
     if useTranslatedTag:
         for idx, tag in enumerate(image_tags):
-            for translated_tags in imageInfo.tags:
+            for translated_tags in imageInfo.tags:  # type: PixivImage.PixivTagData
                 if translated_tags.tag == tag:
                     image_tags[idx] = translated_tags.get_translation(tagTranslationLocale)
                     break
@@ -758,6 +758,8 @@ def makeSubdirs(filename):
 def download_image(url, filename, res, file_size, overwrite):
     ''' Actual download, return the downloaded filesize and saved filename.'''
     start_time = datetime.now()
+    global _config
+    BUFFER_SIZE = _config.downloadBuffer * 1024
 
     # try to save to the given filename + .pixiv extension if possible
     try:
@@ -780,7 +782,7 @@ def download_image(url, filename, res, file_size, overwrite):
     msg_len = 0
     try:
         while True:
-            save.write(res.read(PixivConstant.BUFFER_SIZE))
+            save.write(res.read(BUFFER_SIZE))
             curr = save.tell()
             msg_len = print_progress(curr, file_size, msg_len)
 
@@ -844,9 +846,11 @@ def print_progress(curr, total, max_msg_length=80):
         color = f"{Fore.GREEN}{Style.BRIGHT}" if complete == animBarLen else Fore.RED
         if use_half_block:
             with_half_block = f"{'━' * (complete - 1)}╸"
-            msg = f"\r{color}[{with_half_block:{animBarLen}} ]{Style.RESET_ALL} {size_in_str(curr)} of {size_in_str(total)}"
+            msg = f"\r{color}[{with_half_block:{animBarLen}}]{Style.RESET_ALL} {size_in_str(curr)} of {size_in_str(total)}"
+        elif complete == animBarLen:
+            msg = f"\r{color}[{'━' * complete:{animBarLen}}]{Style.RESET_ALL} {size_in_str(total)}"
         else:
-            msg = f"\r{color}[{'━' * complete:{animBarLen}} ]{Style.RESET_ALL} {size_in_str(curr)} of {size_in_str(total)}"
+            msg = f"\r{color}[{'━' * complete:{animBarLen}}]{Style.RESET_ALL} {size_in_str(curr)} of {size_in_str(total)}"
 
     else:
         # indeterminite
@@ -1020,6 +1024,17 @@ def ugoira2webm(ugoira_file, exportname, codec="libvpx-vp9", extension="webm", i
                    codec=codec,
                    param=_config.ffmpegParam,
                    extension=extension,
+                   image=image)
+
+
+def ugoira2mkv(ugoira_file, exportname, codec="copy", image=None):
+    print_and_log('info', 'Processing ugoira to mkv...')
+    convert_ugoira(ugoira_file,
+                   exportname,
+                   ffmpeg=_config.ffmpeg,
+                   codec=codec,
+                   param=_config.mkvParam,
+                   extension="mkv",
                    image=image)
 
 

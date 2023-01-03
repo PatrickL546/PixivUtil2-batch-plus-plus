@@ -154,6 +154,7 @@ class PixivConfig():
         ConfigItem("Pixiv", "r18Type", 0),  # Issue #439
         ConfigItem("Pixiv", "dateFormat", ""),
         ConfigItem("Pixiv", "autoAddMember", False),
+        ConfigItem("Pixiv", "aiDisplayFewer", False),
 
         ConfigItem("FANBOX", "filenameFormatFanboxCover",
                    "FANBOX %artist% (%member_id%)" + os.sep + "%urlFilename% - %title%",
@@ -178,6 +179,8 @@ class PixivConfig():
         ConfigItem("FFmpeg", "ffmpegCodec", "libvpx-vp9"),
         ConfigItem("FFmpeg", "ffmpegExt", "webm"),
         ConfigItem("FFmpeg", "ffmpegParam", "-lossless 0 -crf 15 -b 0 -vsync 0"),
+        ConfigItem("FFmpeg", "mkvCodec", "copy"),
+        ConfigItem("FFmpeg", "mkvParam", ""),
         ConfigItem("FFmpeg", "webpCodec", "libwebp"),
         ConfigItem("FFmpeg", "webpParam", "-lossless 0 -compression_level 5 -quality 100 -loop 0 -vsync 0"),
         ConfigItem("FFmpeg", "gifParam",
@@ -187,6 +190,7 @@ class PixivConfig():
 
         ConfigItem("Ugoira", "writeUgoiraInfo", False),
         ConfigItem("Ugoira", "createUgoira", False),
+        ConfigItem("Ugoira", "createMkv", False),
         ConfigItem("Ugoira", "createWebm", False),
         ConfigItem("Ugoira", "createWebp", False),
         ConfigItem("Ugoira", "createGif", False),
@@ -212,6 +216,8 @@ class PixivConfig():
         ConfigItem("DownloadControl", "skipUnknownSize", False),
         ConfigItem("DownloadControl", "enablePostProcessing", False),
         ConfigItem("DownloadControl", "postProcessingCmd", ""),
+        ConfigItem("DownloadControl", "extensionFilter", ""),
+        ConfigItem("DownloadControl", "downloadBuffer", 512, restriction=lambda x: int(x) > 0),
     ]
 
     def __init__(self):

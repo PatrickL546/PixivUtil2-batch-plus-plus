@@ -16,6 +16,7 @@ import demjson3
 import mechanize
 import socks
 from bs4 import BeautifulSoup
+from colorama import Fore, Style
 
 import PixivHelper
 from PixivArtist import PixivArtist
@@ -158,8 +159,8 @@ class PixivBrowser(mechanize.Browser):
         # self.visit_response
         self.addheaders = [('User-agent', config.useragent)]
 
-        # force utf-8, fix issue #184
-        self.addheaders += [('Accept-Charset', 'utf-8')]
+        # # force utf-8, fix issue #184
+        # self.addheaders += [('Accept-Charset', 'utf-8')]
 
         socket.setdefaulttimeout(config.timeout)
 
@@ -343,10 +344,10 @@ class PixivBrowser(mechanize.Browser):
             PixivHelper.print_and_log('info', 'Trying to log in with saved cookie')
             self.clearCookie()
             self._loadCookie(login_cookie, "pixiv.net")
-            res = self.open_with_retry('https://www.pixiv.net/')
+            res = self.open_with_retry('https://www.pixiv.net/en')  # + self._locale)
             parsed = BeautifulSoup(res, features="html5lib")
             parsed_str = str(parsed.decode('utf-8'))
-            PixivHelper.get_logger().info('Logging in, return url: %s', res.geturl())
+            PixivHelper.print_and_log("info", f'Logging in, return url: {res.geturl()}')
             res.close()
             parsed.decompose()
             del parsed
@@ -775,7 +776,7 @@ class PixivBrowser(mechanize.Browser):
                 url = f'https://www.pixiv.net/ajax/user/{member_id}/profile/all'
                 need_to_slice = True
 
-            PixivHelper.print_and_log('info', f'Member Url: {url}')
+            PixivHelper.print_and_log('info', f'{Fore.LIGHTGREEN_EX}{"Member Url":14}:{Style.RESET_ALL} {url}')
 
         if url is not None:
             # cache the response

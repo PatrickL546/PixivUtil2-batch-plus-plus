@@ -4,6 +4,9 @@ Simple Python scripts that I personally use for archiving with PixivUtil2
 
 Hopefully merge dedupe if I have time
 
+> [!NOTE]  
+> Not in active development, could use a rewrite
+
 ## Warning
 
 - Pixiv recently limited the ammount of connections, keep the PixivUtil2 download instance to 1
